@@ -15,7 +15,7 @@ int aVals[] = {
 
 // pwm enabled pins
 int pwmPins[] = {
-  3, 4, 5, 9, 10
+  3, 4, 9, 5, 10
 };
 
 // pwm values for LEDs
@@ -45,22 +45,22 @@ void setup() {
 
 void loop() {
   readAnalogInputs();  
-  pwmFlowControll();    
+  pwmFlowControll(); 
+  delay(30);  
   writePwms();
-  delay(100);
+  //sdelay(100);
   for(int i = 0; i < 5; i++){
     Serial.print(pwmVals[i]);
     Serial.print("  -  ");
   }
-  Serial.println("|");
-  
+  Serial.println("|");   
   
 }
 
 void readAnalogInputs(){
   for(int i = 0; i < 5; i++){
     aVals[i] = analogRead(aPins[i]);
-    delay(2);
+    //delay(2);
   }
 }
 
@@ -68,27 +68,80 @@ void readAnalogInputs(){
 void pwmFlowControll(){
   // mapping of logic to continuous pwm values
   // search for on gates
-  for(int i = 0; i < 5; i++){
-    
-    // grab values
-    int aVal = aVals[i];
-    int pwmVal = pwmVals[i];
-    
-    // rise or fall of pwm according to logic
-    // !!! reverse logic, 0 means full light
-    if(aVal<distanceLimit){
-      pwmVals[i] = constrain(pwmVal-stepUp,0,255);
-    } else {
-      pwmVals[i] = constrain(pwmVal+stepDown,0,255);
-    }
+//  for(int i = 0; i < 5; i++){
+//    
+//    // grab values
+//    int aVal = aVals[i];
+//    int pwmVal = pwmVals[i];
+//    
+//    // rise or fall of pwm according to logic
+//    if(aVal<distanceLimit){
+//      pwmVals[i] = constrain(pwmVal+stepUp,0,255);
+//    } else {
+//      pwmVals[i] = constrain(pwmVal-stepDown,0,255);
+//    }
+//  }
+  //delay(10);
+  if(aVals[0]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]+stepUp,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]-stepDown,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
   }
-  delay(10);
+  if (aVals[0]<distanceLimit&&aVals[1]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]+stepUp,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]-stepDown,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
+  }
+  if (aVals[1]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]+stepUp,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]-stepDown,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
+  }
+  if (aVals[1]<distanceLimit&&aVals[2]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]-stepDown,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]+stepUp,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
+  }
+  if (aVals[2]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]-stepDown,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]+stepUp,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
+  }
+  if (aVals[2]<distanceLimit&&aVals[3]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]-stepDown,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]+stepUp,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
+  }
+  if (aVals[3]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]-stepDown,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]+stepUp,0,255);
+    pwmVals[3] = constrain(pwmVals[3]-stepDown,0,255);    
+  }
+  if (aVals[3]<distanceLimit&&aVals[4]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]-stepDown,0,255);
+    pwmVals[1] = constrain(pwmVals[1]+stepUp,0,255);
+    pwmVals[2] = constrain(pwmVals[2]+stepUp,0,255);
+    pwmVals[3] = constrain(pwmVals[3]+stepUp,0,255);    
+  }
+  if (aVals[4]<distanceLimit){
+    pwmVals[0] = constrain(pwmVals[0]-stepDown,0,255);
+    pwmVals[1] = constrain(pwmVals[1]-stepDown,0,255);
+    pwmVals[2] = constrain(pwmVals[2]+stepUp,0,255);
+    pwmVals[3] = constrain(pwmVals[3]+stepUp,0,255);    
+  }
 }
 
 
 void writePwms(){
   for(int i = 0; i < 5; i++){
     analogWrite(pwmPins[i],pwmVals[i]);
-    delay(2);
+    //delay(2);
   }
 }
